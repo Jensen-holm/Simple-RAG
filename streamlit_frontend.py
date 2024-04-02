@@ -15,14 +15,16 @@ def display_messages():
 
 
 def process_input():
-    if st.session_state["user_input"] and len(st.session_state["user_input"].strip()) > 0:
+    if (
+        st.session_state["user_input"]
+        and len(st.session_state["user_input"].strip()) > 0
+    ):
         user_text = st.session_state["user_input"].strip()
         with st.session_state["thinking_spinner"], st.spinner(f"Thinking"):
             agent_text = st.session_state["assistant"].ask(user_text)
 
         st.session_state["messages"].append((user_text, True))
         st.session_state["messages"].append((agent_text, False))
-
 
 
 def read_and_save_file():
@@ -35,10 +37,12 @@ def read_and_save_file():
             tf.write(file.getbuffer())
             file_path = tf.name
 
-        with st.session_state["ingestion_spinner"], st.spinner(f"Ingesting {file.name}"):
+        with st.session_state["ingestion_spinner"], st.spinner(
+            f"Ingesting {file.name}"
+        ):
             st.session_state["assistant"].ingest(file_path)
         os.remove(file_path)
-    
+
 
 def page():
     if len(st.session_state) == 0:
